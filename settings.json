@@ -1,0 +1,254 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "TRUE",
+    "CLAUDE_CODE_ATTRIBUTION_HEADER": "0"
+  },
+  "permissions": {
+    "defaultMode": "default",
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(npm test *)",
+      "Bash(npx *)",
+      "Bash(yarn *)",
+      "Bash(pnpm *)",
+      "Bash(bun *)",
+      "Bash(make *)",
+      "Bash(cargo *)",
+      "Bash(cargo build *)",
+      "Bash(go test *)",
+      "Bash(go build *)",
+      "Bash(pytest *)",
+      "Bash(python -m pytest *)",
+      "Bash(git status)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git branch*)",
+      "Bash(git show*)",
+      "Bash(git stash*)",
+      "Bash(git fetch*)",
+      "Bash(git checkout -b *)",
+      "Bash(git switch -c *)",
+      "Bash(git add *)",
+      "Bash(ls *)",
+      "Bash(pwd)",
+      "Bash(echo *)"
+    ],
+    "ask": [
+      "Bash(git push*)",
+      "Bash(git commit*)",
+      "Bash(git merge*)",
+      "Bash(git rebase*)",
+      "Bash(git reset*)",
+      "Bash(git clean*)",
+      "Bash(git tag*)",
+      "Bash(rm *)",
+      "Bash(sudo *)",
+      "Bash(chmod *)",
+      "Bash(chown *)",
+      "Bash(brew install*)",
+      "Bash(brew upgrade*)",
+      "Bash(pip install*)",
+      "Bash(pip install -g*)",
+      "Bash(npm install -g*)",
+      "Bash(npm uninstall -g*)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./**/.env)",
+      "Read(./**/.env.*)",
+      "Read(./secrets/**)",
+      "Read(./**/secrets/**)",
+      "Read(./**/*.pem)",
+      "Read(./**/*.key)",
+      "Read(./**/*.p12)",
+      "Read(./**/*.pfx)",
+      "Read(./**/*.keystore)",
+      "Read(~/.aws/**)",
+      "Read(~/.ssh/**)",
+      "Read(~/.gnupg/**)",
+      "Read(~/.gcp/**)",
+      "Read(~/.config/gh/hosts.yml)",
+      "Read(./**/credentials.json)",
+      "Read(./**/service-account*.json)",
+      "Read(./**/gha-creds-*.json)",
+      "Read(./**/.npmrc)",
+      "Read(./**/.pypirc)",
+      "Read(~/.npmrc)",
+      "Read(~/.pypirc)",
+      "Read(~/.netrc)",
+      "Read(//**/id_rsa)",
+      "Read(//**/id_ed25519)",
+      "Read(//**/id_ecdsa)",
+      "Read(//**/.netrc)",
+      "Edit(./.github/workflows/**)",
+      "Edit(./.github/workflows.yml)",
+      "Edit(./.github/workflows.yaml)",
+      "Edit(./.gitlab-ci.yml)",
+      "Edit(./.circleci/**)",
+      "Edit(./Jenkinsfile)",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(nc *)",
+      "Bash(netcat *)",
+      "Bash(scp *)",
+      "Bash(ssh *@*)",
+      "Bash(ftp *)",
+      "Bash(tftp *)",
+      "Bash(:(){:|:&};:)",
+      "Bash(dd if=*of=/dev/*)",
+      "Bash(mkfs*)",
+      "Bash(shutdown*)",
+      "Bash(reboot*)",
+      "Bash(halt*)",
+      "Bash(poweroff*)",
+      "WebFetch"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/block-main-commit.sh",
+            "timeout": 10,
+            "statusMessage": "Checking branch for commit"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/block-force-push.sh",
+            "timeout": 10,
+            "statusMessage": "Checking push for force flags"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/block-raw-network.sh",
+            "timeout": 10,
+            "statusMessage": "Checking for raw network tools"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/block-destructive.sh",
+            "timeout": 10,
+            "statusMessage": "Checking for destructive commands"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/protect-ci-workflows.sh",
+            "timeout": 10,
+            "statusMessage": "Checking CI workflow paths"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/audit-writes.sh",
+            "timeout": 15,
+            "statusMessage": "Auditing write for secrets"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/session-guard.sh",
+            "timeout": 15,
+            "statusMessage": "Running session guard"
+          }
+        ]
+      }
+    ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "filesystem": {
+      "denyRead": [
+        "~/.aws",
+        "~/.ssh",
+        "~/.gnupg",
+        "~/.config/gh"
+      ],
+      "denyWrite": [
+        "~/.ssh",
+        "~/.claude/settings.json"
+      ]
+    },
+    "network": {
+      "allowedDomains": [
+        "github.com",
+        "*.github.com",
+        "*.githubusercontent.com",
+        "raw.githubusercontent.com",
+        "registry.npmjs.org",
+        "*.npmjs.org",
+        "pypi.org",
+        "*.pypi.org",
+        "files.pythonhosted.org",
+        "crates.io",
+        "static.crates.io",
+        "index.crates.io",
+        "proxy.golang.org",
+        "*.goproxy.io",
+        "api.anthropic.com"
+      ]
+    },
+    "credentials": {
+      "files": [
+        { "path": "~/.aws/credentials", "mode": "deny" },
+        { "path": "~/.aws/config", "mode": "deny" },
+        { "path": "~/.ssh/id_rsa", "mode": "deny" },
+        { "path": "~/.ssh/id_ed25519", "mode": "deny" },
+        { "path": "~/.ssh/id_ecdsa", "mode": "deny" },
+        { "path": "~/.netrc", "mode": "deny" },
+        { "path": "~/.npmrc", "mode": "deny" },
+        { "path": "~/.pypirc", "mode": "deny" }
+      ],
+      "envVars": [
+        { "name": "AWS_ACCESS_KEY_ID", "mode": "deny" },
+        { "name": "AWS_SECRET_ACCESS_KEY", "mode": "deny" },
+        { "name": "AWS_SESSION_TOKEN", "mode": "deny" },
+        { "name": "GITHUB_TOKEN", "mode": "deny" },
+        { "name": "GH_TOKEN", "mode": "deny" },
+        { "name": "NPM_TOKEN", "mode": "deny" },
+        { "name": "PYPI_TOKEN", "mode": "deny" },
+        { "name": "ANTHROPIC_API_KEY", "mode": "deny" }
+      ]
+    }
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline.sh"
+  },
+  "extraKnownMarketplaces": {},
+  "effortLevel": "high",
+  "autoUpdatesChannel": "latest",
+  "skipWorkflowUsageWarning": true,
+  "theme": "dark",
+  "editorMode": "normal",
+  "verbose": true,
+  "autoCompactEnabled": true,
+  "terminalProgressBarEnabled": true,
+  "claudeCode": {
+    "disableLoginPrompt": true
+  },
+  "thinking": {
+    "budget": 0
+  }
+}

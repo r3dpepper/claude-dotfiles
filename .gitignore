@@ -1,0 +1,39 @@
+# OS noise
+.DS_Store
+*.swp
+*~
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Local overrides / secrets — never commit these
+.env
+.env.*
+secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+.netrc
+.npmrc
+.pypirc
+credentials.json
+service-account*.json
+gha-creds-*.json
+
+# Editor / IDE
+.idea/
+.vscode/
+*.iml
+
+# Local test artifacts (if any sneak in)
+test/
+tests/
+*.test
+*.bak
+*.tmp
+
+# Local Claude Code runtime state — symlinks live in ~/.claude/
+# but this directory holds session files, OAuth, plugins, .cc-writes, etc.
+.claude/
