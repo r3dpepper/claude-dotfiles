@@ -46,3 +46,10 @@ Applies to all projects unless a project's own `.claude/rules/` overrides.
   `block-destructive.sh` hook enforces this.
 - If you don't know which branch you're on, run `git status` and
   `git branch --show-current` before anything else.
+
+## End-to-end flow (branch → work → PR → merge)
+
+For the full workflow — when to branch, when to rebase vs.
+squash-merge, how to handle review — see
+[`branch-workflow.md`](./branch-workflow.md). This file covers
+commit hygiene; that file covers the PR-shaped workflow.
