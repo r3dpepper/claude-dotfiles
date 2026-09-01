@@ -96,7 +96,6 @@
       "Bash(ssh *@*)",
       "Bash(ftp *)",
       "Bash(tftp *)",
-      "Bash(:(){:|:&};:)",
       "Bash(dd if=*of=/dev/*)",
       "Bash(mkfs*)",
       "Bash(shutdown*)",
