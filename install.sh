@@ -57,6 +57,7 @@ TRACKED=(
   "hooks/block-destructive.sh|hooks/block-destructive.sh|hooks/block-destructive.sh"
   "hooks/session-guard.sh|hooks/session-guard.sh|hooks/session-guard.sh"
   "hooks/audit-writes.sh|hooks/audit-writes.sh|hooks/audit-writes.sh"
+  "hooks/lint-ai-tells.sh|hooks/lint-ai-tells.sh|hooks/lint-ai-tells.sh"
 )
 
 header "Linking files"

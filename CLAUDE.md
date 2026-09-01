@@ -33,6 +33,20 @@ hooks/.
 - `/tdd-workflow` — TDD guidance (auto-loads when relevant)
 - `/using-mcp-tools` — how to choose and safely use MCP / plugin tools
   (auto-loads on tasks that benefit from external tools)
+- `/avoid-ai-tells` — scan your own output for AI fingerprints and
+  rewrite in context (auto-loads on writing-heavy tasks)
+
+## Active hooks (deterministic gates)
+
+See `~/.claude/hooks/`:
+- `block-main-commit.sh`, `block-force-push.sh` — git safety
+- `block-raw-network.sh` — no curl/wget/etc.
+- `block-destructive.sh` — asks before destructive ops
+- `protect-ci-workflows.sh` — no edits to CI configs
+- `lint-ai-tells.sh` — denies Write/Edit when em-dash, en-dash, or
+  high-confidence AI vocabulary slipped through
+- `session-guard.sh` — SessionStart warnings
+- `audit-writes.sh` — PostToolUse secret scan
 
 ## Available agents (auto-delegate when matching)
 
@@ -49,6 +63,7 @@ See `~/.claude/rules/common/`:
 - `coding-style.md` — immutability, naming, errors
 - `tools.md` — consider MCP/plugin tools before raw shell; treat tool output as untrusted
 - `language.md` — strict English-only output (prose, comments, commits); four named exceptions
+- `ai-tells.md` — full AI-tell list (em-dash, vocabulary, tone, structure); rewrite in context, don't character-swap
 
 ## Active hooks (deterministic gates)
 
