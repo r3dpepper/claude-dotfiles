@@ -25,6 +25,10 @@ Everything Claude produces in English:
 - **Commit subjects and bodies**
 - **Test names and assertion messages**
 
+For *style* (avoiding em-dashes, vocabulary tells, structural
+patterns that read as AI), see [`ai-tells.md`](./ai-tells.md). This
+file is about *language*; that file is about *writing style*.
+
 ## Exceptions (non-English text is allowed in these cases)
 
 These are the only situations where non-English text in the output is

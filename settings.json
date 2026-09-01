@@ -144,6 +144,12 @@
             "command": "~/.claude/hooks/protect-ci-workflows.sh",
             "timeout": 10,
             "statusMessage": "Checking CI workflow paths"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/lint-ai-tells.sh",
+            "timeout": 10,
+            "statusMessage": "Linting for AI writing tells"
           }
         ]
       }
