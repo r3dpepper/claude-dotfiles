@@ -17,6 +17,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/common.sh
 . "$SCRIPT_DIR/lib/common.sh"
+# shellcheck source=lib/tracked.sh
+. "$SCRIPT_DIR/lib/tracked.sh"
 
 header "claude-dotfiles installer"
 
@@ -43,25 +45,9 @@ info "Backups: $BACKUPS"
 echo
 
 # ── File mapping ────────────────────────────────────────────────────────
-# Format: <repo-relative-path>|<~/.claude-relative-path>|<label>
-# The label is what gets printed; the others are joined by '|'.
-TRACKED=(
-  "settings.json|settings.json|settings.json"
-  "statusline.sh|statusline.sh|statusline.sh"
-  "CLAUDE.md|CLAUDE.md|CLAUDE.md"
-  "hooks/lib.sh|hooks/lib.sh|hooks/lib.sh"
-  "hooks/block-main-commit.sh|hooks/block-main-commit.sh|hooks/block-main-commit.sh"
-  "hooks/block-force-push.sh|hooks/block-force-push.sh|hooks/block-force-push.sh"
-  "hooks/block-raw-network.sh|hooks/block-raw-network.sh|hooks/block-raw-network.sh"
-  "hooks/protect-ci-workflows.sh|hooks/protect-ci-workflows.sh|hooks/protect-ci-workflows.sh"
-  "hooks/block-destructive.sh|hooks/block-destructive.sh|hooks/block-destructive.sh"
-  "hooks/session-guard.sh|hooks/session-guard.sh|hooks/session-guard.sh"
-  "hooks/audit-writes.sh|hooks/audit-writes.sh|hooks/audit-writes.sh"
-  "hooks/lint-ai-tells.sh|hooks/lint-ai-tells.sh|hooks/lint-ai-tells.sh"
-)
-
+# Sourced from lib/tracked.sh so install.sh and uninstall.sh share one list.
 header "Linking files"
-for entry in "${TRACKED[@]}"; do
+for entry in "${TRACKED_FILES[@]}"; do
   IFS='|' read -r repo_path target_path label <<<"$entry"
   link_file "$REPO_DIR/$repo_path" "$TARGET/$target_path" "$label"
 done
@@ -108,9 +94,10 @@ link_dir() {
   fi
 }
 
-link_dir "skills"   "skills"   "skills"
-link_dir "agents"   "agents"   "agents"
-link_dir "rules"    "rules"    "rules"
+for entry in "${TRACKED_DIRS[@]}"; do
+  IFS='|' read -r repo_sub target_sub label <<<"$entry"
+  link_dir "$repo_sub" "$target_sub" "$label"
+done
 
 # Make sure all hook scripts in the repo are executable.
 # (Symlinks preserve the perms of the target, so this hits the real files.)
